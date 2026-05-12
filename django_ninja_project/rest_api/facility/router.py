@@ -9,7 +9,7 @@ from django_ninja_project.rest_api.facility.api.get_facility_by_id import get_fa
 from django_ninja_project.rest_api.facility.api.get_facility_list import get_facility_list
 from django_ninja_project.rest_api.facility.api.patch_facility_by_id import patch_facility_by_id
 from django_ninja_project.rest_api.facility.api.put_facility_by_id import put_facility_by_id
-from django_ninja_project.rest_api.facility.schemas.output import FacilityOutputSchema
+from django_ninja_project.rest_api.facility.schemas.output import FacilityBaseOutputSchema
 
 facility_router = Router(tags=["Facility"])
 
@@ -17,7 +17,7 @@ facility_router.add_api_operation(
     methods=['GET'],
     path='/',
     response={
-        HTTPStatus.OK: list[FacilityOutputSchema]
+        HTTPStatus.OK: list[FacilityBaseOutputSchema]
     },
     view_func=get_facility_list,
     summary="Get Facility list",
@@ -27,7 +27,7 @@ facility_router.add_api_operation(
     methods=['GET'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityOutputSchema,
+        HTTPStatus.OK: FacilityBaseOutputSchema,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
     view_func=get_facility_by_id,
@@ -38,18 +38,19 @@ facility_router.add_api_operation(
     methods=['POST'],
     path='/',
     response={
-        HTTPStatus.CREATED: FacilityOutputSchema,
+        HTTPStatus.CREATED: FacilityBaseOutputSchema,
         HTTPStatus.CONFLICT: ErrorResponse,
     },
     view_func=create_facility,
     summary="Create Facility",
+    auth=None
 )
 
 facility_router.add_api_operation(
     methods=['PATCH'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityOutputSchema,
+        HTTPStatus.OK: FacilityBaseOutputSchema,
         HTTPStatus.CONFLICT: ErrorResponse,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
@@ -61,7 +62,7 @@ facility_router.add_api_operation(
     methods=['PUT'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityOutputSchema,
+        HTTPStatus.OK: FacilityBaseOutputSchema,
         HTTPStatus.CONFLICT: ErrorResponse,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
@@ -73,7 +74,7 @@ facility_router.add_api_operation(
     methods=['DELETE'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityOutputSchema,
+        HTTPStatus.OK: FacilityBaseOutputSchema,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
     view_func=delete_facility_by_id,

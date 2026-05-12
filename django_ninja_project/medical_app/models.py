@@ -1,7 +1,9 @@
-from django.core.validators import RegexValidator
+import datetime
+
 from django.db import models
 
 from django_ninja_project.common.models import TimeStampMixin
+from django_ninja_project.validators import cyrillic_validator, address_validator
 
 
 class ProcedureTypeChoices(models.TextChoices):
@@ -12,7 +14,7 @@ class ProcedureTypeChoices(models.TextChoices):
 class Procedure(TimeStampMixin):
     name = models.CharField(
         max_length=100,
-        validators=[RegexValidator(regex=r"[а-яА-ЯёЁ]")],
+        validators=[cyrillic_validator],
         verbose_name="Имя процедуры",
     )
 
@@ -22,13 +24,15 @@ class Procedure(TimeStampMixin):
         default=ProcedureTypeChoices.BLOOD,
         verbose_name="Тип услуги")
 
-    cost = models.PositiveIntegerField(
+    cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         default=0,
         verbose_name="Цена услуги"
     )
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["created_at"]
         verbose_name = "Процедура"
         verbose_name_plural = "Процедуры"
         db_table = "procedure"
@@ -37,48 +41,55 @@ class Procedure(TimeStampMixin):
 class Facility(TimeStampMixin):
     name = models.CharField(
         max_length=100,
-        validators=[RegexValidator(regex=r"[а-яА-ЯёЁ]")],
+        validators=[cyrillic_validator],
         verbose_name="Название мед. учреждения",
     )
 
     address = models.CharField(
         max_length=100,
+        validators=[address_validator],
         verbose_name="Адрес учреждения"
     )
 
     start_work_time = models.TimeField(
-        default="08:00",
+        default=datetime.time(0,0),
         verbose_name="Начало времени работы учреждения"
 
     )
 
     end_work_time = models.TimeField(
-        default="17:00",
+        default=datetime.time(23,59),
         verbose_name="Конец времени рабочего дня"
     )
 
     procedures = models.ManyToManyField(
         Procedure,
-        related_name="procedures",
+        related_name="facilities",
+        null=True,
     )
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["created_at"]
         verbose_name = "Учреждение"
         verbose_name_plural = "Учреждения"
         db_table = "facility"
-
+        constraints=[
+            models.UniqueConstraint(
+                fields=["name", "address"],
+                name="unique_facility_name_address",
+            )
+        ]
 
 class Doctor(TimeStampMixin):
     name = models.CharField(
         max_length=100,
-        validators=[RegexValidator(regex=r"[а-яА-ЯёЁ]")],
+        validators=[cyrillic_validator],
         verbose_name="Имя врача",
     )
 
     speciality = models.CharField(
         max_length=100,
-        validators=[RegexValidator(regex=r"[а-яА-ЯёЁ]")],
+        validators=[cyrillic_validator],
         verbose_name="Специальность",
     )
 
@@ -88,25 +99,26 @@ class Doctor(TimeStampMixin):
     )
 
     start_work_time = models.TimeField(
-        default="08:00",
+        default=datetime.time(0,0),
         verbose_name="Начало времени работы учреждения"
 
     )
 
     end_work_time = models.TimeField(
-        default="17:00",
+        default=datetime.time(23,59),
         verbose_name="Конец времени рабочего дня"
     )
 
     facility = models.ForeignKey(
         Facility,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
+        related_name="doctors",
         verbose_name='Учреждение работы'
     )
 
     class Meta:
-        ordering = ["-id"]
+        ordering = ["created_at"]
         verbose_name = "Доктор"
         verbose_name_plural = "Доктора"
         db_table = "doctor"
