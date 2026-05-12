@@ -1,13 +1,16 @@
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404
 
 from django_ninja_project.medical_app.models import Facility
-from django_ninja_project.rest_api.facility.exceptions import FacilityAlreadyExistsException
+from django_ninja_project.rest_api.facility.exceptions import FacilityAlreadyExistsException, FacilityNotFoundException
 from django_ninja_project.rest_api.facility.schemas.input import FacilityPatchSchema
 
 
 def patch_facility_by_id(request: HttpRequest, facility_id: int, payload: FacilityPatchSchema):
-    facility = get_object_or_404(Facility, id=facility_id)
+    try:
+        facility = Facility.objects.get(id=facility_id)
+    except Facility.DoesNotExist:
+        raise FacilityNotFoundException(f"Учреждение с id {facility_id} не найден")
+
     data = payload.model_dump(exclude_unset=True)
 
     procedures = data.pop("procedures", None)
