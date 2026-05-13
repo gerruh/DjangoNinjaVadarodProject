@@ -19,7 +19,7 @@ class FacilityListOutputSchema(Schema):
     name: str
     address: str
 
-class FacilityDetailOutputScheme(Schema):
+class FacilityDetailOutputSchema(Schema):
     name: str
     address: str
     start_work_time: time

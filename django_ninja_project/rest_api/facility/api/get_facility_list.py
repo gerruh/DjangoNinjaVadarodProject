@@ -8,4 +8,4 @@ from django_ninja_project.rest_api.facility.schemas.filter import FacilityFilter
 
 @paginate
 def get_facility_list(request: HttpRequest, filters: FacilityFilterSchema = Query()) -> Query:
-    return filters.filter(Facility.objects.all())
+    return filters.filter(Facility.objects.filter(deleted_at__isnull=True))

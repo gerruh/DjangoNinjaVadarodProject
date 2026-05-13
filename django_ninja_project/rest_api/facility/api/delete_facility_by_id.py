@@ -1,19 +1,11 @@
-from datetime import datetime
-
 from django.http import HttpRequest
 
-from django_ninja_project.medical_app.models import Facility
-from django_ninja_project.rest_api.facility.exceptions import FacilityNotFoundException
+from django_ninja_project.rest_api.facility.schemas.output import FacilityDetailOutputSchema
+from django_ninja_project.rest_api.facility.services.delete_facility_serivce import DeleteFacilityService
 
 
-def delete_facility_by_id(request: HttpRequest, facility_id: int):
-
-    try:
-        facility = Facility.objects.get(id=facility_id)
-    except Facility.DoesNotExist:
-        raise FacilityNotFoundException(f"Учреждение с id {facility_id} не найден")
-
-    facility.deleted_at = datetime.now()
-    facility.save()
+def delete_facility_by_id(request: HttpRequest, facility_id: int) -> FacilityDetailOutputSchema:
+    service = DeleteFacilityService()
+    facility: FacilityDetailOutputSchema = service.execute(facility_id=facility_id)
 
     return facility

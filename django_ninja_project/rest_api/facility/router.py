@@ -8,8 +8,8 @@ from django_ninja_project.rest_api.facility.api.create_facility import create_fa
 from django_ninja_project.rest_api.facility.api.get_facility_by_id import get_facility_by_id
 from django_ninja_project.rest_api.facility.api.get_facility_list import get_facility_list
 from django_ninja_project.rest_api.facility.api.patch_facility_by_id import patch_facility_by_id
-from django_ninja_project.rest_api.facility.api.put_facility_by_id import put_facility_by_id
-from django_ninja_project.rest_api.facility.schemas.output import FacilityBaseOutputSchema
+from django_ninja_project.rest_api.facility.schemas.output import FacilityBaseOutputSchema, FacilityListOutputSchema, \
+    FacilityDetailOutputSchema
 
 facility_router = Router(tags=["Facility"])
 
@@ -17,7 +17,8 @@ facility_router.add_api_operation(
     methods=['GET'],
     path='/',
     response={
-        HTTPStatus.OK: list[FacilityBaseOutputSchema]
+        HTTPStatus.OK: list[FacilityListOutputSchema],
+        HTTPStatus.NOT_FOUND: ErrorResponse,
     },
     view_func=get_facility_list,
     summary="Get Facility list",
@@ -27,7 +28,7 @@ facility_router.add_api_operation(
     methods=['GET'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityBaseOutputSchema,
+        HTTPStatus.OK: FacilityDetailOutputSchema,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
     view_func=get_facility_by_id,
@@ -50,7 +51,7 @@ facility_router.add_api_operation(
     methods=['PATCH'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityBaseOutputSchema,
+        HTTPStatus.OK: FacilityDetailOutputSchema,
         HTTPStatus.CONFLICT: ErrorResponse,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
@@ -59,22 +60,10 @@ facility_router.add_api_operation(
 )
 
 facility_router.add_api_operation(
-    methods=['PUT'],
-    path='/{facility_id}',
-    response={
-        HTTPStatus.OK: FacilityBaseOutputSchema,
-        HTTPStatus.CONFLICT: ErrorResponse,
-        HTTPStatus.NOT_FOUND: ErrorResponse,
-    },
-    view_func=put_facility_by_id,
-    summary="Full update Facility by id",
-)
-
-facility_router.add_api_operation(
     methods=['DELETE'],
     path='/{facility_id}',
     response={
-        HTTPStatus.OK: FacilityBaseOutputSchema,
+        HTTPStatus.OK: FacilityDetailOutputSchema,
         HTTPStatus.NOT_FOUND: ErrorResponse,
     },
     view_func=delete_facility_by_id,
