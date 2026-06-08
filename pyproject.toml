@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "dnp"
+version = "0.1.0"
+description = "Менджемент врачей и клиник"
+authors = ["Herman Volzhsky <avvewyccstrila@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+Django = ">=5.1.6"
+django-ninja = ">=1.6"
+python-dotenv = "^1.2.1"
+django-celery-beat = "^2.7.0"
+redis = "^5.2.1"
+celery = {extras = ["redis"], version = "^5.4.0"}
+psycopg2-binary = "^2.9.10"
+
+[tool.poetry.group.dev.dependencies]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
