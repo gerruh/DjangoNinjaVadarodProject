@@ -15,7 +15,7 @@ class DeleteFacilityService:
         except Facility.DoesNotExist:
             raise NotFoundException(f"Facility with id {facility_id} not found")
 
-        facility.deleted_at = datetime.timezone()
+        facility.deleted_at = datetime.datetime.now(datetime.timezone.utc)
         facility.save()
 
         return FacilityDetailOutputSchema.model_validate(facility)

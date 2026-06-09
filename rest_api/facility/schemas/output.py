@@ -2,7 +2,7 @@ from datetime import time, datetime
 
 from ninja import Schema
 
-from rest_api.procedure.schemas.output import ProcedureOutputSchema
+from rest_api.procedure.schemas.output import ProcedureListOutputSchema
 
 
 class FacilityBaseOutputSchema(Schema):
@@ -11,7 +11,7 @@ class FacilityBaseOutputSchema(Schema):
     address: str
     start_work_time: time
     end_work_time: time
-    procedures: list[ProcedureOutputSchema]
+    procedures: list[ProcedureListOutputSchema]
     created_at: datetime
 
 class FacilityListOutputSchema(Schema):
@@ -24,7 +24,7 @@ class FacilityDetailOutputSchema(Schema):
     address: str
     start_work_time: time
     end_work_time: time
-    procedures: list[ProcedureOutputSchema]
+    procedures: list[ProcedureListOutputSchema]
     created_at: datetime
     updated_at: datetime
     deleted_at: datetime | None = None

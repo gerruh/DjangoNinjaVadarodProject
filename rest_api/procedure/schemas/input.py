@@ -6,7 +6,7 @@ class ProcedureInputSchema(Schema):
     type: str
     cost: int
 
-class ProcedurePatchSchema(Schema):
-    name: str | None
-    type: str | None
-    cost: int | None
+class ProcedurePatchSchema(ProcedureInputSchema):
+    name: str | None = None
+    type: str | None = None
+    cost: int | None = None

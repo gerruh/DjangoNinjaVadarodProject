@@ -33,7 +33,6 @@ class Facility(TimeStampMixin):
     procedures = models.ManyToManyField(
         Procedure,
         related_name="facilities",
-        null=True,
     )
 
     class Meta:

@@ -1,19 +1,10 @@
-from datetime import datetime
-
 from django.http import HttpRequest
 
-from apps.procedure.models import Procedure
-from rest_api.procedure.exceptions import ProcedureNotFoundException
+from rest_api.procedure.schemas.output import ProcedureDetailOutputSchema
+from rest_api.procedure.services.delete_procedure_service import DeleteProcedureService
 
 
 def delete_procedure_by_id(request: HttpRequest, procedure_id: int):
-
-    try:
-        procedure = Procedure.objects.get(id=procedure_id)
-    except Procedure.DoesNotExist:
-        raise ProcedureNotFoundException(f"Учреждение с id {procedure_id} не найден")
-
-    procedure.deleted_at = datetime.now()
-    procedure.save()
-
+    service = DeleteProcedureService()
+    procedure: ProcedureDetailOutputSchema = service.execute(procedure_id)
     return procedure

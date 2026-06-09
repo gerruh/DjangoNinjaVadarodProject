@@ -1,22 +1,11 @@
 from django.http import HttpRequest
-from django.shortcuts import get_object_or_404
 
-from apps.procedure.models import Procedure
-from rest_api.procedure.exceptions import ProcedureAlreadyExistsException
 from rest_api.procedure.schemas.input import ProcedurePatchSchema
+from rest_api.procedure.schemas.output import ProcedureDetailOutputSchema
+from rest_api.procedure.services.update_procedure_service import UpdateProcedureService
 
 
 def patch_procedure_by_id(request: HttpRequest, procedure_id: int, payload: ProcedurePatchSchema):
-    procedure = get_object_or_404(Procedure, id=procedure_id)
-    data = payload.model_dump(exclude_unset=True)
-
-    if "name" in data:
-        if Procedure.objects.exclude(id=procedure_id).filter(name=data["name"]).exists():
-            raise ProcedureAlreadyExistsException(f'Процедура с именем {data["name"]} уже существует')
-
-    for attr, value in data.items():
-        setattr(procedure, attr, value)
-
-    procedure.save()
-
+    service = UpdateProcedureService()
+    procedure: ProcedureDetailOutputSchema = service.execute(procedure_id, payload)
     return procedure

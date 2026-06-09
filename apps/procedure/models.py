@@ -34,3 +34,9 @@ class Procedure(TimeStampMixin):
         verbose_name = "Процедура"
         verbose_name_plural = "Процедуры"
         db_table = "procedure"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "type"],
+                name="unique_procedure_type",
+            )
+        ]
