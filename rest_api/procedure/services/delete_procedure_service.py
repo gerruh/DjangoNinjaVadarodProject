@@ -11,7 +11,7 @@ class DeleteProcedureService:
     @transaction.atomic
     def execute(self, procedure_id: int) -> ProcedureDetailOutputSchema:
         try:
-            procedure: Procedure = Procedure.objects.get(id=procedure_id)
+            procedure: Procedure = Procedure.objects.get(id=procedure_id, deleted_at__isnull=True)
         except Procedure.DoesNotExist:
             raise NotFoundException(f"Procedure with id {procedure_id} not found")
 

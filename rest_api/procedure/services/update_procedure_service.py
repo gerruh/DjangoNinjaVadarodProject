@@ -1,6 +1,6 @@
 from typing import Any
-from django.db import transaction
-from django.db import IntegrityError
+
+from django.db import IntegrityError, transaction
 
 from apps.procedure.models import Procedure
 from common.api.exceptions import NotFoundException, AlreadyExistsException
@@ -12,20 +12,20 @@ class UpdateProcedureService:
     @transaction.atomic
     def execute(self, procedure_id: int, payload: ProcedureInputSchema) -> ProcedureDetailOutputSchema:
         try:
-            procedure: Procedure = Procedure.objects.get(id=procedure_id)
+            procedure: Procedure = Procedure.objects.get(id=procedure_id, deleted_at__isnull=True)
         except Procedure.DoesNotExist:
             raise NotFoundException(f"Procedure with id {procedure_id} does not exist")
 
         data: dict[str, Any] = payload.model_dump(exclude_unset=True)
 
+        for attr, value in data.items():
+            setattr(procedure, attr, value)
+
         try:
-            for attr, value in data.items():
-                setattr(procedure, attr, value)
+            procedure.save()
         except IntegrityError:
             raise AlreadyExistsException(
                 f"Procedure with such name '{procedure.name}' and type '{procedure.type}' combination already exists"
             )
-
-        procedure.save()
 
         return ProcedureDetailOutputSchema.model_validate(procedure)

@@ -7,7 +7,7 @@ from rest_api.facility.schemas.output import FacilityDetailOutputSchema
 
 def get_facility_by_id(request: HttpRequest, facility_id: int):
     try:
-        facility = Facility.objects.get(id=facility_id)
+        facility = Facility.objects.get(id=facility_id, deleted_at__isnull=True)
     except Facility.DoesNotExist:
         raise NotFoundException(f"Facility with id {facility_id} is not found.")
 

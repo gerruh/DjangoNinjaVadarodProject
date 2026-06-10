@@ -11,7 +11,7 @@ class DeleteFacilityService:
     @transaction.atomic
     def execute(self, facility_id: int) -> FacilityDetailOutputSchema:
         try:
-            facility: Facility = Facility.objects.get(id=facility_id)
+            facility: Facility = Facility.objects.get(id=facility_id, deleted_at__isnull=True)
         except Facility.DoesNotExist:
             raise NotFoundException(f"Facility with id {facility_id} not found")
 

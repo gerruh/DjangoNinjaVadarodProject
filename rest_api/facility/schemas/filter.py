@@ -1,68 +1,72 @@
 from datetime import datetime, time
+from typing import Annotated
 
-from ninja import FilterSchema
-from pydantic import Field
+from ninja import Field, FilterLookup, FilterSchema
 
 
 class FacilityFilterSchema(FilterSchema):
-    id: int = Field(
-        None,
-        description="Facility id",
-        json_schema_extra={"q": "id"},
-    )
-    name: str = Field(
-        None,
-        description="Facility name",
-        json_schema_extra={"q": "name__icontains"},
-    )
-    address: str = Field(
-        None,
-        description="Facility address",
-        json_schema_extra={"q": "address__icontains"},
-    )
-
-    start_work_time_from: time = Field(
-        None,
-        description="Facility start work time",
-        json_schema_extra={"q": "start_work_time__gte"},
-    )
-
-    start_work_time_to: time = Field(
-        None,
-        description="Facility start work time",
-        json_schema_extra={"q": "start_work_time__lte"},
-    )
-
-    end_work_time_from: time = Field(
-        None,
-        description="Facility end work time",
-        json_schema_extra={"q": "end_work_time__gte"},
-    )
-
-    end_work_time_from_to: time = Field(
-        None,
-        description="Facility end work time",
-        json_schema_extra={"q": "end_work_time__lte"},
-    )
-
-    procedures: list[int] = Field(
-        None,
-        description="Facility procedures",
-        json_schema_extra={"q": "procedures__id__in"},
-    )
-
-    created_at: datetime = Field(
-        None,
-        description="Facility creation date",
-        json_schema_extra={"q": "created_at"},
-    )
-    updated_at: datetime = Field(
-        None,
-        description="Facility creation date",
-        json_schema_extra={"q": "updated_at"},
-    )
-    deleted_at: datetime = Field(
-        None,
-        description="Facility deletion date",
-        json_schema_extra={"q": "deleted_at"},
-    )
+    name: Annotated[
+        str | None,
+        FilterLookup(q="name__icontains"),
+        Field(description="Facility name"),
+    ] = None
+    address: Annotated[
+        str | None,
+        FilterLookup(q="address__icontains"),
+        Field(description="Facility address"),
+    ] = None
+    start_work_time_from: Annotated[
+        time | None,
+        FilterLookup(q="start_work_time__gte"),
+        Field(description="Facility start work time"),
+    ] = None
+    start_work_time_to: Annotated[
+        time | None,
+        FilterLookup(q="start_work_time__lte"),
+        Field(description="Facility start work time"),
+    ] = None
+    end_work_time_from: Annotated[
+        time | None,
+        FilterLookup(q="end_work_time__gte"),
+        Field(description="Facility end work time"),
+    ] = None
+    end_work_time_to: Annotated[
+        time | None,
+        FilterLookup(q="end_work_time__lte"),
+        Field(description="Facility end work time"),
+    ] = None
+    procedures: Annotated[
+        list[int] | None,
+        FilterLookup(q="procedures__id__in"),
+        Field(description="Facility procedures"),
+    ] = None
+    created_at_from: Annotated[
+        datetime | None,
+        FilterLookup(q="created_at__gte"),
+        Field(description="Facility creation date from"),
+    ] = None
+    created_at_to: Annotated[
+        datetime | None,
+        FilterLookup(q="created_at__lte"),
+        Field(description="Facility creation date to"),
+    ] = None
+    updated_at_from: Annotated[
+        datetime | None,
+        FilterLookup(q="updated_at__gte"),
+        Field(description="Facility updated date from"),
+    ] = None
+    updated_at_to: Annotated[
+        datetime | None,
+        FilterLookup(q="updated_at__lte"),
+        Field(description="Facility updated date to"),
+    ] = None
+    deleted_at_from: Annotated[
+        datetime | None,
+        FilterLookup(q="deleted_at__gte"),
+        Field(description="Facility deletion date from"),
+    ] = None
+    deleted_at_to: Annotated[
+        datetime | None,
+        FilterLookup(q="deleted_at__lte"),
+        Field(description="Facility deletion date to"),
+    ] = None
