@@ -37,8 +37,7 @@ class Doctor(TimeStampMixin):
 
     facility = models.ForeignKey(
         Facility,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name="doctors",
         verbose_name='Учреждение работы'
     )
