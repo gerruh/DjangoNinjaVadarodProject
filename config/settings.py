@@ -77,6 +77,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+PAGINATION_PER_PAGE = int(os.environ.get('PAGINATION_PER_PAGE', 10))
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

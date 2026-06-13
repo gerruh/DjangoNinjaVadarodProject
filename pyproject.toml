@@ -1,6 +1,5 @@
 [tool.poetry]
 name = "dnp"
-version = "0.1.0"
 description = "Менджемент врачей и клиник"
 authors = ["Herman Volzhsky <avvewyccstrila@gmail.com>"]
 readme = "README.md"
@@ -15,6 +14,7 @@ django-celery-beat = "^2.7.0"
 redis = "^5.2.1"
 celery = {extras = ["redis"], version = "^5.4.0"}
 psycopg2-binary = "^2.9.10"
+django-ninja-extra = "^0.31.4"
 
 [tool.poetry.group.dev.dependencies]
 
