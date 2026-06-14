@@ -47,3 +47,9 @@ class Doctor(TimeStampMixin):
         verbose_name = "Доктор"
         verbose_name_plural = "Доктора"
         db_table = "doctor"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "speciality"],
+                name="unique_doctor_name_speciality",
+            )
+        ]

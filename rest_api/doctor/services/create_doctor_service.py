@@ -24,6 +24,6 @@ class CreateDoctorService:
                 facility_id=facility_id,
             )
         except IntegrityError:
-            raise AlreadyExistsException("Doctor with such data already exists")
+            raise AlreadyExistsException(f'Doctor with name {payload.name} and speciality {payload.speciality} already exists')
 
         return DoctorBaseOutputSchema.model_validate(doctor)
