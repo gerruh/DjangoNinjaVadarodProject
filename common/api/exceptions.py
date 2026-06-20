@@ -6,6 +6,10 @@ class AppException(Exception):
         self.detail = detail or self.default_detail
         super().__init__(self.detail)
 
+class UnauthorizedException(AppException):
+    status_code = 401
+    default_detail = "Unauthorized"
+
 class NotFoundException(AppException):
     status_code = 404
     default_detail = "Object not found"
