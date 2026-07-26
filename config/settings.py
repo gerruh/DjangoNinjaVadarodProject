@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'apps.doctor',
     'apps.facility',
     'apps.procedure',
-    'apps.user'
+    'apps.user',
+    "ninja_jwt",
+    "ninja_jwt.token_blacklist",
 ]
 
 MIDDLEWARE = [
